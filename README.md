@@ -1,58 +1,59 @@
-# 💎 FinSpire — Gamified Financial Literacy & Trading Simulator
+# 💎 FinSpire: Gamified Financial Literacy Platform
 
-**Project by:** Rohan  Meshram
-    
-**Course:** [Your Course Name]
-**Submitted:** [Date]
-**Tech Stack:** Python 3.10+ · Streamlit · Plotly · Pandas · NumPy
+> **Master the markets through interactive simulation. Learn. Earn. Trade.**
 
----
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://YOUR-APP-URL-HERE.streamlit.app)
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![License](https://img.shields.io/badge/License-Educational-green)
 
-## ⚡ Quick Start — Read This First
-
-FinSpire is a **web application built with Streamlit**. To run it, you do **not** open `finspire.py` by double-clicking. You must launch it from a terminal. This guide walks you through it in under 2 minutes.
+**Live Demo:** [https://YOUR-APP-URL-HERE.streamlit.app](https://YOUR-APP-URL-HERE.streamlit.app) *(Replace this link with your actual Streamlit URL)*
 
 ---
 
-## 🖥️ Windows Setup (Most Common)
+## 📖 What is FinSpire?
 
-### Step 1 — Install Python (skip if already installed)
+FinSpire is a **production-ready, gamified financial literacy web application** designed specifically for the Indian market. It shifts the paradigm from boring text quizzes to **interactive micro-learning simulations**.
 
-1. Go to https://www.python.org/downloads/
-2. Click the yellow **Download Python 3.12.x** button
-3. Run the installer
-4. **CRITICAL:** On the first installer screen, check **"Add python.exe to PATH"** — this is a small checkbox at the bottom
-5. Click **Install Now**
-6. Wait, then click **Close**
+Instead of giving users a "fake" ₹10,000,000 portfolio to play with, FinSpire forces users to **earn their trading capital by proving their knowledge**. 
 
-**Verify it worked:** Open PowerShell and type `python --version`
-You should see `Python 3.12.x`. If you get an error, reinstall and make sure that PATH checkbox is checked.
-
-### Step 2 — Extract the ZIP
-
-1. Right-click `FinSpire_KashishMeshram.zip`
-2. Choose **Extract All…**
-3. Extract to a folder you can find easily (e.g., Desktop)
-
-### Step 3 — Run the App (Easiest Method)
-
-**Double-click `START_WINDOWS.bat`** in the extracted folder.
-
-A black terminal window will open, install the required libraries (first time only, takes ~2 minutes), then launch the app in your browser.
-
-**That's it.** Your browser will open `http://localhost:8501` and FinSpire will load.
+### 🎯 The Core Loop
+1. **Learn:** Read deeply researched, India-specific chapters (e.g., NSE/BSE mechanics, STCG/LTCG tax rules, SEBI regulations).
+2. **Practice:** Use interactive widgets (Candlestick builders, Risk calculators, Options payoff charts).
+3. **Earn:** Pass quizzes to unlock actual trading capital.
+4. **Trade:** Use your unlocked capital to trade real Indian tickers (RELIANCE, TCS, HDFCBANK, etc.) with live P&L tracking.
+5. **Reflect:** Journal your trades. An AI-integrated keyword scanner detects cognitive biases (FOMO, Revenge Trading, Anchoring).
 
 ---
 
-## 🍎 Mac / Linux Setup
+## ✨ Key Features
 
-### Step 1 — Open Terminal
+| Module | Description |
+| :--- | :--- |
+| **📚 8 Deep-Lesson Chapters** | From stock market basics to complex Options & F&O. Each lesson includes worked examples, pitfalls, and real Indian market case studies. |
+| **💹 Instrument-Level Trading** | Trade specific NSE blue chips (RELIANCE, INFY) or other assets. Tracks real-time weighted average cost basis and unrealized P&L. |
+| **🎰 Options Paper Trading** | Interactive Black-Scholes pricing engine with real-time Greeks (Δ, Γ, Θ, V). Paper trade NIFTY weekly options. |
+| **📓 Bias-Detecting Journal** | Log your trade reasoning. Natural language processing scans your entry to flag FOMO, Anchoring, or Revenge Trading. |
+| **⏮️ Backtest Sandbox** | Replay NIFTY/SENSEX history. Test moving-average crossover strategies with performance metrics (Sharpe, Sortino, Max Drawdown). |
+| **🏛️ Prop Firm Challenge** | Unlocked after earning ₹95,000. Take a simulated funded challenge with strict drawdown limits to prove your risk management. |
+| **🏆 Gamification** | 19 unique achievements, XP system, and anonymous opt-in leaderboards. |
+| **🇮🇳 Bilingual Support** | Full support for English and हिन्दी (Hindi). |
 
-- **Mac:** Press `Cmd + Space`, type "Terminal", press Enter
-- **Linux:** Open your Terminal app
+---
 
-### Step 2 — Navigate to the Folder
+## 🛠️ Technology Stack
 
-If you extracted to Downloads:
+*   **Frontend & Logic:** [Streamlit](https://streamlit.io/) (Pure Python, no HTML/CSS/JS files)
+*   **Data Visualization:** [Plotly](https://plotly.com/python/) (Interactive charts, equity curves, payoff graphs)
+*   **Data Handling:** Pandas, NumPy
+*   **Live Market Data:** `yfinance` (with graceful fallback to simulated prices if offline)
+
+---
+
+## 🚀 Run Locally
+
+Want to run FinSpire on your own machine? It takes less than 2 minutes.
+
+### 1. Clone the repository
 ```bash
-cd ~/Downloads/FinSpire_KashishMeshram
+git clone https://github.com/YOUR_USERNAME/finspire.git
+cd finspire
