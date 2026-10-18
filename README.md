@@ -1,5 +1,9 @@
 # 💎 FinSpire: Gamified Financial Literacy Platform
 
+> **📌 For evaluators:** Live app → [https://finspire.streamlit.app](https://finspire.streamlit.app)
+> If the app shows a "waking up" spinner, wait ~30 seconds and refresh.
+> To run locally: `pip install -r requirements.txt` then `streamlit run finspire.py`
+
 > **Master the markets through interactive simulation. Learn. Earn. Trade.**
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://YOUR-APP-URL-HERE.streamlit.app)
@@ -54,6 +58,7 @@ Instead of giving users a "fake" ₹10,000,000 portfolio to play with, FinSpire 
 Want to run FinSpire on your own machine? It takes less than 2 minutes.
 
 ### 1. Clone the repository
-```bash
-git clone https://github.com/YOUR_USERNAME/finspire.git
+git clone https://github.com/codeninja2210/finspire.git
 cd finspire
+pip install -r requirements.txt
+streamlit run finspire.py
