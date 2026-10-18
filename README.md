@@ -1,6 +1,6 @@
 # 💎 FinSpire: Gamified Financial Literacy Platform
 
-> **📌 For evaluators:** Live app → [https://finspire.streamlit.app](https://finspire.streamlit.app)
+> **📌 For evaluators:** Live app → https://finspire-pcx6esauptv8whcxkarx8o.streamlit.app
 > If the app shows a "waking up" spinner, wait ~30 seconds and refresh.
 > To run locally: `pip install -r requirements.txt` then `streamlit run finspire.py`
 
