@@ -60,5 +60,7 @@ Want to run FinSpire on your own machine? It takes less than 2 minutes.
 ### 1. Clone the repository
 git clone https://github.com/codeninja2210/finspire.git
 cd finspire
+
 pip install -r requirements.txt
+
 streamlit run finspire.py
