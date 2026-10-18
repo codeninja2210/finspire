@@ -33,8 +33,8 @@ import pandas as pd
 import numpy as np
 import random, json, math, os, io
 from datetime import datetime, timedelta, date
-from pathlib import Path
 from collections import Counter, deque
+from streamlit_js_eval import streamlit_js_eval
 
 HAS_YF = _has("yfinance")
 if HAS_YF:
@@ -278,7 +278,6 @@ def t(k):
 
 # ============================================================================
 # CURRICULUM — 8 CHAPTERS (Deep Lesson Format)
-# NOTE: Kept identical to your working version to save space.
 # ============================================================================
 CURRICULUM = [
     {
@@ -1023,92 +1022,90 @@ if not st.session_state.get("instrument_history"):
 
 
 # ============================================================================
-# PERSISTENCE
+# PERSISTENCE — per-browser via localStorage (survives refresh, isolated)
 # ============================================================================
-SAVE_DIR = Path.home() / ".finspire"
-SAVE_DIR.mkdir(exist_ok=True)
-SAVE_FILE = SAVE_DIR / "progress.json"
+# NOTE: Streamlit Cloud runs all visitors in one shared container.
+# Writing to disk would leak progress across users.
+# localStorage is scoped to the user's own browser — perfect for this use case.
 
-def save_progress():
-    """Persist ALL gameplay-critical state to disk (auto-called)."""
-    snapshot = {
-        # Learning
-        "xp": st.session_state.xp,
-        "completed_chapters": st.session_state.completed_chapters,
-        "chapter_stage": st.session_state.chapter_stage,
-        "unlocked_capital": st.session_state.unlocked_capital,
-        "srs_schedule": st.session_state.srs_schedule,
+PERSIST_KEYS = [
+    "xp", "completed_chapters", "chapter_stage", "unlocked_capital",
+    "portfolio", "starting_capital", "achievements", "journal",
+    "risk_profile", "leaderboard_name", "leaderboard_opt_in",
+    "instrument_prices", "instrument_holdings", "instrument_history",
+    "srs_schedule", "equity_curve", "max_drawdown", "round_number",
+    "options_book", "options_history", "bias_flags", "onboarded",
+]
 
-        # Portfolio
-        "portfolio": st.session_state.portfolio,
-        "starting_capital": st.session_state.starting_capital,
-        "prices": st.session_state.prices,
-        "price_history": st.session_state.price_history,
-        "round_number": st.session_state.round_number,
-        "equity_curve": st.session_state.equity_curve,
-        "max_drawdown": st.session_state.max_drawdown,
+_STORAGE_KEY = "finspire_v4_progress"
 
-        # Instruments
-        "instrument_prices": st.session_state.instrument_prices,
-        "instrument_holdings": st.session_state.instrument_holdings,
-        "instrument_history": st.session_state.instrument_history,
+def _serialize_state():
+    """Convert the relevant session state to a JSON string."""
+    snapshot = {k: st.session_state.get(k) for k in PERSIST_KEYS}
+    snapshot["_saved_at"] = datetime.now().isoformat()
+    return json.dumps(snapshot, default=str, separators=(",", ":"))
 
-        # Journal
-        "journal": st.session_state.journal,
-        "bias_flags": st.session_state.bias_flags,
-
-        # Options
-        "options_book": st.session_state.options_book,
-        "options_history": st.session_state.options_history,
-
-        # Prop firm
-        "prop_active": st.session_state.prop_active,
-        "prop_starting": st.session_state.prop_starting,
-        "prop_target": st.session_state.prop_target,
-        "prop_max_dd": st.session_state.prop_max_dd,
-        "prop_failed": st.session_state.prop_failed,
-
-        # Meta
-        "achievements": st.session_state.achievements,
-        "risk_profile": st.session_state.risk_profile,
-        "leaderboard_name": st.session_state.leaderboard_name,
-        "leaderboard_opt_in": st.session_state.leaderboard_opt_in,
-        "onboarded": st.session_state.onboarded,
-        "page": st.session_state.page,
-        "lang": st.session_state.lang,
-
-        "saved_at": datetime.now().isoformat(),
-    }
+def _deserialize_state(raw: str) -> bool:
+    """Restore session state from a JSON string."""
     try:
-        SAVE_FILE.write_text(json.dumps(snapshot, indent=2, default=str))
+        data = json.loads(raw)
+        if not isinstance(data, dict):
+            return False
+        for k in PERSIST_KEYS:
+            if k in data:
+                st.session_state[k] = data[k]
+        # Ensure instruments exist after import
+        for cls, tickers in INSTRUMENTS.items():
+            for tk, meta in tickers.items():
+                st.session_state.instrument_prices.setdefault(tk, meta["base"])
+                st.session_state.instrument_history.setdefault(tk, [])
         return True
     except Exception:
         return False
 
-def load_progress():
-    """Hydrate session state from disk. Returns True if loaded."""
-    if not SAVE_FILE.exists():
-        return False
-    try:
-        data = json.loads(SAVE_FILE.read_text())
-    except Exception:
-        return False
+def save_to_local_storage():
+    """Write the current state to the browser's localStorage."""
+    payload = _serialize_state()
+    safe = payload.replace("\\", "\\\\").replace("'", "\\'")
+    js = f"window.localStorage.setItem('{_STORAGE_KEY}', '{safe}')"
+    streamlit_js_eval(js_expressions=js, key="save_progress_js")
 
-    # Restore each key that exists in our known state
-    for k, v in data.items():
-        if k == "saved_at":
-            continue
-        # Only restore keys we actually track in session_state
-        if k in st.session_state:
-            st.session_state[k] = v
+def load_from_local_storage():
+    """Read state from localStorage and restore it if present."""
+    raw = streamlit_js_eval(
+        js_expressions=f"window.localStorage.getItem('{_STORAGE_KEY}')",
+        key="load_progress_js",
+    )
+    if raw and isinstance(raw, str) and raw != "null":
+        return _deserialize_state(raw)
+    return False
 
-    # Ensure instrument dicts are populated even if partial save
-    for cls, tickers in INSTRUMENTS.items():
-        for tk, meta in tickers.items():
-            st.session_state.instrument_prices.setdefault(tk, meta["base"])
-            st.session_state.instrument_history.setdefault(tk, [])
+def clear_local_storage():
+    """Remove the saved state from this browser."""
+    streamlit_js_eval(
+        js_expressions=f"window.localStorage.removeItem('{_STORAGE_KEY}')",
+        key="clear_progress_js",
+    )
 
-    return True
+
+# ── Auto-restore from localStorage on first load (per browser) ──
+# streamlit_js_eval is async: the first call returns None, and the real
+# value arrives on the next rerun. So we trigger one rerun if needed.
+if not st.session_state.get("_storage_checked"):
+    _raw = streamlit_js_eval(
+        js_expressions=f"window.localStorage.getItem('{_STORAGE_KEY}')",
+        key="load_progress_js",
+    )
+    if _raw is not None:
+        # JS responded — either restored data or confirmed empty
+        st.session_state._storage_checked = True
+        if isinstance(_raw, str) and _raw != "null":
+            if _deserialize_state(_raw):
+                st.toast("📂 Previous progress restored from this browser",
+                         icon="💾")
+    else:
+        # JS hasn't responded yet — rerun to retry on the next pass
+        st.rerun()
 
 
 # ============================================================================
@@ -1391,20 +1388,19 @@ def render_sidebar():
                 st.rerun()
 
         st.markdown("---")
-        if st.button("💾 Save Progress", use_container_width=True):
-            (st.success if save_progress() else st.error)("Progress saved")
-        if st.button("📂 Load Progress", use_container_width=True):
-            (st.success if load_progress() else st.warning)("Loaded / not found")
-                    
-        if SAVE_FILE.exists():
-            try:
-                meta = json.loads(SAVE_FILE.read_text())
-                saved_at = meta.get("saved_at", "")
-                if saved_at:
-                    dt = datetime.fromisoformat(saved_at)
-                    st.caption(f"💾 Last saved: {dt.strftime('%d %b, %H:%M')}")
-            except Exception:
-                pass
+        st.markdown("#### 💾 Progress")
+        if st.button("💾 Save to this browser", use_container_width=True):
+            save_to_local_storage()
+            st.success("Progress saved to this browser.")
+        if st.button("📂 Restore from this browser", use_container_width=True):
+            if load_from_local_storage():
+                st.success("Progress restored.")
+                st.rerun()
+            else:
+                st.warning("No saved progress found in this browser.")
+        if st.button("🗑️ Clear saved progress", use_container_width=True):
+            clear_local_storage()
+            st.info("Saved progress cleared from this browser.")
 
         st.markdown("---")
         st.caption(f"XP: {st.session_state.xp} • "
@@ -1455,10 +1451,12 @@ def render_onboarding():
                  disabled=profile is None):
         st.session_state.risk_profile = profile.split(" — ")[0]
         st.session_state.onboarded = True
-        save_progress(); st.rerun()
+        save_to_local_storage()
+        st.rerun()
     if c2.button("Explore first (no risk profile)", use_container_width=True):
         st.session_state.risk_profile = "Balanced"
         st.session_state.onboarded = True
+        save_to_local_storage()
         st.rerun()
 
 
@@ -1585,18 +1583,14 @@ def render_chapter_detail(cid):
                 f"<b style='color:#10b981;'>🔑 Key takeaways</b>"
                 f"<ul style='margin-top:0.5rem;'>{takeaways_html}</ul></div>",
                 unsafe_allow_html=True)
-            if st.button(t("read"), use_container_width=True):
-             st.session_state.chapter_stage[cid] = "practice"
-            award_xp(15, "Lesson read")
-            save_progress()   
-            st.rerun()
+        if st.button(t("read"), use_container_width=True):
+            st.session_state.chapter_stage[cid] = "practice"
+            award_xp(15, "Lesson read"); st.rerun()
 
     elif stage == "practice":
         run_practice(ch["practice"])
         if st.button(t("practice_ready"), use_container_width=True):
-            st.session_state.chapter_stage[cid] = "quiz";
-            save_progress()
-            st.rerun()
+            st.session_state.chapter_stage[cid] = "quiz"; st.rerun()
 
     elif stage == "quiz":
         st.caption("2 of 3 correct to pass.")
@@ -1631,7 +1625,7 @@ def render_chapter_detail(cid):
                     if cid in ach_map: unlock_ach(ach_map[cid])
                     if len(st.session_state.completed_chapters) == len(CURRICULUM):
                         unlock_ach("graduate")
-                    save_progress()
+                    save_to_local_storage()
                     st.balloons()
                     st.success(f"🎉 {correct}/3! "
                                f"{inr(ch['reward'])} {t('pass_reward')}")
@@ -1928,6 +1922,7 @@ def page_trade():
 
         if submit:
             handle_trade(asset_class, ticker, action, amt, inst_price, reason)
+            save_to_local_storage()
 
         if st.session_state.feedback:
             k, m = st.session_state.feedback
@@ -1935,7 +1930,9 @@ def page_trade():
             st.session_state.feedback = None
 
         if st.button(t("advance"), use_container_width=True):
-            advance_market(); st.rerun()
+            advance_market()
+            save_to_local_storage()
+            st.rerun()
 
     # ── RIGHT: Price chart ────────────────────────────────────────────
     with right:
@@ -2140,7 +2137,6 @@ def handle_trade(asset_class, ticker, action, amt, price, reason):
                f"realized P&L {sign}{inr(abs(realized))}")
     st.session_state.feedback = ("ok", msg)
     award_xp(5, f"{entry['action']} {amt} {ticker}")
-    save_progress()
 
 
 # ============================================================================
@@ -2186,7 +2182,6 @@ def advance_market():
             st.success("🎉 PROP CHALLENGE PASSED! You're funded.")
 
     award_xp(3, "Market round")
-    save_progress()
 
 
 # ============================================================================
@@ -2268,7 +2263,7 @@ def page_options():
                 })
                 unlock_ach("options_paper")
                 award_xp(15, "Options paper trade opened")
-                save_progress()
+                save_to_local_storage()
                 st.success(f"✅ Bought {lots} lot(s) {strike} {option_type} "
                            f"@ {inr(price)} — total {inr(premium_total)}")
                 st.rerun()
@@ -2288,7 +2283,7 @@ def page_options():
                     "iv": iv, "margin": margin,
                 })
                 award_xp(15, "Options written")
-                save_progress()
+                save_to_local_storage()
                 st.success(f"✅ Sold {lots} lot(s) — collected "
                            f"{inr(premium_total)}, margin blocked {inr(margin)}")
                 st.rerun()
@@ -2331,7 +2326,7 @@ def page_options():
                     })
                     st.session_state.options_book.pop(i)
                     award_xp(10, "Options closed")
-                    save_progress()
+                    save_to_local_storage()
                     st.rerun()
 
     if st.session_state.options_history:
@@ -2413,7 +2408,7 @@ def page_journal():
             unlock_ach("self_aware")
         unlock_ach("voice_trader")
         award_xp(10, "Journal entry")
-        save_progress()
+        save_to_local_storage()
         st.success("✅ Entry logged.")
         st.rerun()
 
@@ -2672,6 +2667,7 @@ def page_leaderboard():
     if submitted:
         st.session_state.leaderboard_name = name.strip() or "Anonymous"
         st.session_state.leaderboard_opt_in = opt
+        save_to_local_storage()
         st.success("Preferences updated.")
 
     st.markdown("---")
@@ -2875,13 +2871,6 @@ def render_footer():
 # MAIN ROUTER
 # ============================================================================
 def main():
-    # ── AUTO-RESTORE: hydrate from disk on first run of this session ──
-    if "restored" not in st.session_state:
-        restored = load_progress()
-        st.session_state["restored"] = True
-        if restored and st.session_state.get("onboarded"):
-            st.toast("✅ Progress restored from your last session", icon="💾")
-
     if not st.session_state.onboarded:
         render_onboarding()
         render_footer()
