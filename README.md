@@ -6,11 +6,10 @@
 
 > **Master the markets through interactive simulation. Learn. Earn. Trade.**
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://YOUR-APP-URL-HERE.streamlit.app)
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
-![License](https://img.shields.io/badge/License-Educational-green)
+[![Streamlit App](https://finspire-pcx6esauptv8whcxkarx8o.streamlit.app/)
 
-**Live Demo:** [https://YOUR-APP-URL-HERE.streamlit.app](https://YOUR-APP-URL-HERE.streamlit.app) *(Replace this link with your actual Streamlit URL)*
+
+**Live Demo:** https://finspire-pcx6esauptv8whcxkarx8o.streamlit.app
 
 ---
 
