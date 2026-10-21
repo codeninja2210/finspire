@@ -34,7 +34,6 @@ import numpy as np
 import random, json, math, os, io
 from datetime import datetime, timedelta, date
 from collections import Counter, deque
-from streamlit_js_eval import streamlit_js_eval
 
 HAS_YF = _has("yfinance")
 if HAS_YF:
@@ -287,55 +286,73 @@ CURRICULUM = [
                 "It's a slow leak.",
         "deep_lesson": [
             {"heading": "The silent tax on idle money",
-             "body": ("Indian savings accounts pay ~3% interest. Inflation runs "
-                      "at ~5–6% on average. Every year, ₹1,00,000 sitting in a "
-                      "savings account loses roughly ₹2,000–₹3,000 of real "
-                      "purchasing power — even though the number on your "
-                      "passbook went up. To *build* wealth, your money must "
-                      "grow faster than inflation."),
-             "worked_example": ("₹1,00,000 in savings @ 3% for 10 years → "
-                                "₹1,34,392.\n₹1,00,000 invested @ 12% for 10 "
-                                "years → ₹3,10,585.\n₹1.76 lakh difference."),
-             "pitfall": ("'Savings = safe, stocks = risky' is oversimplified. "
-                         "Savings is safe from volatility but guaranteed to "
-                         "lose to inflation.")},
+             "body": ("Most people in India are taught to keep their money in a savings account because it is 'safe'. "
+                      "While it is true that your balance will not drop due to market crashes, keeping your wealth in cash is "
+                      "actually a guaranteed way to get poorer over time.\n\n"
+                      "This happens because of **inflation**—the rate at which the prices of everyday goods and services rise. "
+                      "In India, savings accounts pay roughly 3% interest. However, inflation averages around 5% to 6%. "
+                      "This means your 'real return' is negative. If your money grows by 3%, but the things you want to buy "
+                      "become 6% more expensive, you have lost 3% of your purchasing power.\n\n"
+                      "To actually build wealth, your money must grow faster than inflation. You need to put it into assets "
+                      "like stocks, mutual funds, or real estate that have historically outpaced inflation."),
+             "worked_example": ("Let's look at ₹1,00,000 over 10 years:\n"
+                                "• In a savings account (3%): It grows to ₹1,34,392.\n"
+                                "• Invested in an index fund (12% average): It grows to ₹3,10,585.\n"
+                                "That is a difference of ₹1.76 Lakh just by moving your money out of a savings account."),
+             "pitfall": ("Thinking 'Savings = Safe' and 'Stocks = Risky'. Savings is safe from volatility, but it is "
+                         "guaranteed to lose to inflation. Stocks are volatile in the short term, but safe for building "
+                         "wealth in the long term.")},
             {"heading": "What a stock actually is (and isn't)",
-             "body": ("A stock is fractional ownership. 10 Infosys shares = a "
-                      "slice of every office, contract, and rupee of profit. "
-                      "You didn't lend money — you became a co-owner. Two "
-                      "payoff channels: price growth + dividends."),
-             "worked_example": ("10 Infosys @ ₹1,500 = ₹15,000 invested.\n"
-                                "Price rises to ₹1,900 → holding = ₹19,000 "
-                                "(+₹4,000).\nPlus ₹18/share dividend = ₹180 "
-                                "cash income."),
-             "pitfall": ("Price ≠ company value. Price is what the last buyer "
-                         "paid. Fundamentals are the underlying reality.")},
+             "body": ("Many people think the stock market is just a digital casino. But buying a stock means you are buying "
+                      "a real, physical piece of a business.\n\n"
+                      "When you buy 10 shares of Infosys, you are not lending them money; you are becoming a part-owner "
+                      "(a shareholder) of the company. You own a tiny slice of their offices, their computers, their contracts, "
+                      "and their future profits.\n\n"
+                      "Because you are an owner, you make money in two ways:\n"
+                      "1. **Capital Appreciation:** If the company grows and becomes more valuable, other people will want to "
+                      "buy your shares for a higher price.\n"
+                      "2. **Dividends:** When the company makes a profit, they often share a portion of it with the owners "
+                      "(you) as a cash payout."),
+             "worked_example": ("You buy 10 shares of Infosys at ₹1,500 each (Total ₹15,000).\n"
+                                "A year later, the company is doing great and the share price hits ₹1,900. Your holding is "
+                                "now worth ₹19,000 (a profit of ₹4,000).\n"
+                                "On top of that, they pay a dividend of ₹18 per share, putting an extra ₹180 directly into your bank account."),
+             "pitfall": ("Confusing a stock's *price* with the company's *value*. The price is just what the last person "
+                         "was willing to pay. The value is the actual health and profitability of the business. Don't let "
+                         "short-term price swings blind you to the underlying business.")},
             {"heading": "Why companies sell shares",
-             "body": ("Companies raise capital two ways: debt (must be repaid) "
-                      "or equity (shareholders paid only if company succeeds). "
-                      "High-growth ventures prefer equity because there's no "
-                      "fixed repayment obligation."),
-             "worked_example": ("Zomato's 2021 IPO raised ~₹9,375 crore, which "
-                                "funded Blinkit acquisition and expansion."),
-             "pitfall": ("'I don't want to bet on companies' — but keeping "
-                         "everything in FDs is also a bet on inflation staying "
-                         "low. Every decision is a bet.")},
+             "body": ("If a company is making money, why would they sell pieces of it to the public? Because they need capital "
+                      "to grow, and they have two ways to get it: Debt or Equity.\n\n"
+                      "**Debt (Bonds):** They borrow from a bank. They have to pay it back with interest, regardless of whether "
+                      "the business succeeds or fails.\n\n"
+                      "**Equity (Stocks):** They sell a piece of ownership. They don't have to pay anything back! If the company "
+                      "makes a profit, they share it with the shareholders. If they don't, they pay nothing.\n\n"
+                      "High-growth companies (like tech startups) prefer selling equity because it is safer for their cash flow."),
+             "worked_example": ("When Zomato had its Initial Public Offering (IPO) in 2021, it didn't go to a bank to take "
+                                "a massive loan. Instead, it sold shares to the public and raised ~₹9,375 crore. They used this "
+                                "money to acquire Blinkit and expand their business without being crushed by bank interest payments."),
+             "pitfall": ("Thinking 'I don't want to bet on companies, I'll just keep my money in a Fixed Deposit.' Keeping "
+                         "money in an FD is also a bet—it is a bet that inflation will stay low. Every financial decision is a bet.")},
             {"heading": "India's market infrastructure",
-             "body": ("NSE (1992) + BSE (1875, Asia's oldest) are the exchanges. "
-                      "SEBI regulates. You need a demat account (holds shares) "
-                      "+ trading account (places orders) with a SEBI-registered "
-                      "broker. NSDL/CDSL are the depositories."),
-             "worked_example": ("Zerodha account → KYC in 24h → demat + trading "
-                                "→ buy 5 Reliance on NSE → shares appear T+1 → "
-                                "sellable 9:15 AM–3:30 PM IST."),
-             "pitfall": ("Never open demat with unregistered 'advisory groups' "
-                         "or WhatsApp tip brokers. Verify SEBI registration.")},
+             "body": ("The Indian stock market is a massive, highly regulated machine. To trade in it, you need to know the "
+                      "players:\n\n"
+                      "• **NSE and BSE:** These are the stock exchanges. They are the digital marketplaces where buyers and "
+                      "sellers meet (BSE is Asia's oldest exchange, established in 1875).\n"
+                      "• **SEBI:** The regulator. They are the police of the market, ensuring no one cheats you.\n"
+                      "• **Depositories (NSDL & CDSL):** These act like your bank, but for shares. When you buy a stock, "
+                      "it is held electronically in your 'Demat' account here.\n"
+                      "• **Brokers:** Companies like Zerodha or Groww that give you the app to actually place the buy/sell orders."),
+             "worked_example": ("You open a Zerodha account (Broker) and complete your KYC (SEBI requirement). You transfer "
+                                "money to your trading account. You place an order to buy 5 shares of Reliance on the NSE. "
+                                "The next day (T+1), those 5 shares appear in your Demat account (NSDL)."),
+             "pitfall": ("Never open a Demat account with unregistered 'advisory groups' or WhatsApp tip brokers. Always verify "
+                         "that your broker is registered with SEBI. The official SEBI website has a list of authorized brokers.")},
         ],
         "key_takeaways": [
-            "Cash in savings is guaranteed to lose to inflation over time.",
-            "A stock is fractional ownership — price + dividends are the two payoffs.",
-            "Companies sell equity to raise capital without fixed repayment.",
-            "NSE + BSE are exchanges; SEBI regulates; NSDL/CDSL hold shares.",
+            "Cash in a savings account is guaranteed to lose purchasing power to inflation over time.",
+            "A stock is fractional ownership. You make money from price growth and dividends.",
+            "Companies sell equity to raise capital without being forced to make fixed loan repayments.",
+            "NSE + BSE are exchanges; SEBI regulates; NSDL/CDSL hold your shares electronically.",
         ],
         "quiz": [
             {"q": "Owning a stock means…",
@@ -343,30 +360,21 @@ CURRICULUM = [
                          "You own a small piece of the company",
                          "You work for the company"],
              "correct": 1,
-             "explain_correct": ("Stock = equity = ownership. Legal claim on "
-                                 "assets and future profits proportional to "
-                                 "shareholding."),
-             "explain_wrong": ("Lending = bond. Working = employment. Only "
-                               "stock means ownership."),
+             "explain_correct": ("Stock = equity = ownership. Legal claim on assets and future profits proportional to shareholding."),
+             "explain_wrong": ("Lending = bond. Working = employment. Only stock means ownership."),
              "mental_model": "Stock = slice of pie. Bond = IOU on pie."},
             {"q": "Why is keeping all money in a savings account risky?",
              "options": ["Banks steal it",
                          "Inflation erodes purchasing power faster than interest grows it",
                          "RBI freezes accounts"],
              "correct": 1,
-             "explain_correct": ("Savings 3%, inflation 5–6%. Real return is "
-                                 "negative. Money 'grows' on paper but buys "
-                                 "less each year."),
-             "explain_wrong": ("Banks don't steal (₹5L insured by DICGC). The "
-                               "real risk is inflation."),
+             "explain_correct": ("Savings 3%, inflation 5–6%. Real return is negative. Money 'grows' on paper but buys less each year."),
+             "explain_wrong": ("Banks don't steal (₹5L insured by DICGC). The real risk is inflation."),
              "mental_model": "If return < inflation, 'safe' money is melting."},
             {"q": "Which Indian regulator oversees stock markets?",
              "options": ["RBI", "SEBI", "IRDAI"], "correct": 1,
-             "explain_correct": ("SEBI — Securities and Exchange Board of India, "
-                                 "est. 1992. Regulates exchanges, brokers, MFs, "
-                                 "listed companies."),
-             "explain_wrong": ("RBI = banks. IRDAI = insurance. AMFI = industry "
-                               "body, not regulator."),
+             "explain_correct": ("SEBI — Securities and Exchange Board of India, est. 1992. Regulates exchanges, brokers, MFs, listed companies."),
+             "explain_wrong": ("RBI = banks. IRDAI = insurance. AMFI = industry body, not regulator."),
              "mental_model": "Banking → RBI. Insurance → IRDAI. Markets → SEBI."},
         ],
     },
@@ -377,74 +385,78 @@ CURRICULUM = [
                 "price at which two strangers agreed to trade.",
         "deep_lesson": [
             {"heading": "The order book — where prices are born",
-             "body": ("Every stock has a bid queue (buyers) and ask queue "
-                      "(sellers). The gap = spread. Tight spread = liquid. "
-                      "Wide spread = illiquid (slippage cost). Last traded "
-                      "price = where a bid met an ask."),
-             "worked_example": ("Bid ₹2,849.50 / Ask ₹2,850.00 → spread ₹0.50 "
-                                "(0.017%).\nSmall-cap: Bid ₹99 / Ask ₹101 → "
-                                "spread ₹2 (2%). Illiquid stocks tax every "
-                                "trade."),
-             "pitfall": ("Market orders in illiquid stocks cause 'slippage' — "
-                         "fill price much worse than screen. Use limit orders "
-                         "if spread > 0.5%.")},
+             "body": ("When you look at a stock chart, you see a single price. But behind that number is a constant war between "
+                      "buyers and sellers called the **Order Book**.\n\n"
+                      "At any second, there are two queues:\n"
+                      "• The **Bid**: The highest price a buyer is currently willing to pay.\n"
+                      "• The **Ask**: The lowest price a seller is currently willing to accept.\n\n"
+                      "The difference between these two is called the **Spread**. The last traded price is simply the moment "
+                      "when a buyer gave up and paid the Ask, or a seller gave up and accepted the Bid."),
+             "worked_example": ("Reliance is trading with a Bid of ₹2,849.50 and an Ask of ₹2,850.00. The spread is 50 paise. "
+                                "However, a tiny, unknown small-cap stock might have a Bid of ₹99 and an Ask of ₹101. The spread is ₹2 (2%). "
+                                "If you buy and immediately sell that small-cap, you instantly lose 2% of your money."),
+             "pitfall": ("Using 'Market Orders' on illiquid (low-volume) stocks. If the spread is wide and you place a market order, "
+                         "you will experience 'slippage'—your order gets filled at a much worse price than what was on your screen. "
+                         "Always use Limit Orders if the spread is wide.")},
             {"heading": "Indices — the market's heartbeat",
-             "body": ("An index is a weighted basket. NIFTY 50 = top 50 NSE "
-                      "companies by free-float market cap. SENSEX = top 30 BSE. "
-                      "Bank NIFTY = 12 largest banks."),
-             "worked_example": ("NIFTY up 0.8% = weighted average of Reliance "
-                                "+1.5%, HDFC +0.3%, Infosys −0.2%, TCS +0.5%, "
-                                "ITC +2.1%."),
-             "pitfall": ("'Market up → my stock up' is wrong. Index correlates, "
-                         "doesn't determine.")},
+             "body": ("You constantly hear on the news: 'The market is up today!' But what does that mean?\n\n"
+                      "They are usually referring to an **Index**. An index is a mathematical basket of the biggest and most "
+                      "important companies. When the basket goes up, we say the 'market' is up.\n\n"
+                      "• **NIFTY 50:** Tracks the 50 largest companies on the NSE.\n"
+                      "• **SENSEX:** Tracks the top 30 companies on the BSE.\n"
+                      "• **Bank NIFTY:** Tracks the 12 largest banks.\n\n"
+                      "These indices use a 'weighted' system. If Reliance has a much larger market cap than ITC, Reliance's "
+                      "price moves will affect the NIFTY much more than ITC's moves."),
+             "worked_example": ("NIFTY goes up by 0.8%. This might be because Reliance went up 1.5%, HDFC went up 0.3%, Infosys "
+                                "went down 0.2%, and ITC went up 2.1%. The total mathematical weight of the winners outweighed the losers."),
+             "pitfall": ("Assuming 'Market up = My stock up'. Indices are just an average. It is very common for the NIFTY to be "
+                         "up 1% while your specific stock is down 5% because of bad company news.")},
             {"heading": "Market hours and settlement (IST)",
-             "body": ("NSE/BSE run 9:15 AM–3:30 PM Mon–Fri. Pre-open auction "
-                      "9:00–9:15. Post-close 3:40–4:00 PM. Settlement T+1 — "
-                      "India led globally in Jan 2023."),
-             "worked_example": ("Buy 100 Infosys Monday 11 AM → cash debited "
-                                "same day → 100 shares in demat Tuesday eve → "
-                                "sellable Wednesday."),
-             "pitfall": ("Can't sell same-day without intraday product. MIS "
-                         "auto-squares at 3:20 PM.")},
+             "body": ("The Indian stock market has strict timing rules (IST):\n\n"
+                      "• **9:00 AM – 9:15 AM:** Pre-open market. You can place orders, but they only execute at 9:15.\n"
+                      "• **9:15 AM – 3:30 PM:** Normal trading hours.\n"
+                      "• **Settlement (T+1):** India adopted T+1 settlement in Jan 2023. This means if you buy a stock on "
+                      "Monday (T), the actual shares are transferred to your Demat account on Tuesday (T+1)."),
+             "worked_example": ("You buy 100 shares of Infosys on Monday at 11 AM. The cash leaves your bank account immediately. "
+                                "On Tuesday evening, the 100 shares officially appear in your Demat. You can only sell them on Wednesday."),
+             "pitfall": ("Expecting to sell shares the same day you bought them. Unless you are explicitly using the 'Intraday' "
+                         "(MIS) product, you cannot sell delivery shares on the same day because they haven't been settled yet.")},
             {"heading": "Who actually moves the market",
-             "body": ("Retail trades millions of small orders. Direction is set "
-                      "by FIIs (foreign institutions), DIIs (Indian MFs, LIC), "
-                      "and proprietary desks. FII/DII data is public and free."),
-             "worked_example": ("March 2020: FIIs sold ₹60,000 cr in a month. "
-                                "NIFTY −38%. DIIs bought. Six months later, "
-                                "NIFTY recovered 60%+."),
-             "pitfall": ("Retail trading more doesn't beat the market. Brokerage "
-                         "+ STT + slippage = 0.3–1% per round trip.")},
+             "body": ("Retail investors (you and me) trade in small numbers. We do not set the direction of the market. "
+                      "The real power lies with the **Big Money**:\n\n"
+                      "• **FIIs (Foreign Institutional Investors):** Huge global funds (like American or European pension funds) "
+                      "that invest in India.\n"
+                      "• **DIIs (Domestic Institutional Investors):** Indian mutual funds, LIC, and insurance companies.\n\n"
+                      "When FIIs decide to pull their money out of India, the market drops because the supply of shares is massive. "
+                      "DIIs usually step in to buy, but FII flows dominate the trend."),
+             "worked_example": ("In March 2020 (COVID crash), FIIs sold ₹60,000 crore worth of Indian stocks in a single month. "
+                                "The NIFTY dropped 38%. DIIs bought heavily, and six months later, the market recovered over 60%."),
+             "pitfall": ("Trying to 'beat the market' by day trading constantly. Brokerage fees, STT (tax), and slippage usually "
+                         "eat up 0.3% to 1% of your capital on every single round trip. The more you trade, the more you lose to friction.")},
         ],
         "key_takeaways": [
-            "Price = last trade. Bid/ask spread is your real cost.",
-            "Indices summarize; don't dictate individual stock moves.",
-            "India runs T+1 settlement — shares arrive next business day.",
-            "FII/DII flows drive direction; retail drives volume.",
+            "Price is just the last agreed trade. The bid/ask spread is a hidden tax on your trades.",
+            "Indices summarize the market. They correlate with individual stocks, but don't dictate them.",
+            "India runs on T+1 settlement. Shares arrive next business day.",
+            "FII and DII flows dictate market direction; retail volume is just background noise.",
         ],
         "quiz": [
             {"q": "Bid = ₹99, Ask = ₹101. What is the spread?",
              "options": ["₹1", "₹2", "₹200"], "correct": 1,
-             "explain_correct": ("Spread = ask − bid = ₹101 − ₹99 = ₹2. On a "
-                                 "₹100 stock that's 2% — huge tax on frequent "
-                                 "trading."),
-             "explain_wrong": ("₹1 = midpoint offset. ₹200 = meaningless "
-                               "multiplication."),
+             "explain_correct": ("Spread = ask − bid = ₹101 − ₹99 = ₹2. On a ₹100 stock that's 2% — huge tax on frequent trading."),
+             "explain_wrong": ("₹1 = midpoint offset. ₹200 = meaningless multiplication."),
              "mental_model": "Spread = ask − bid."},
             {"q": "NIFTY 50 tracks how many companies?",
              "options": ["30", "50", "500"], "correct": 1,
-             "explain_correct": ("NIFTY 50 = 50 NSE companies. SENSEX = 30 BSE. "
-                                 "NIFTY 500 = 500 companies."),
+             "explain_correct": ("NIFTY 50 = 50 NSE companies. SENSEX = 30 BSE. NIFTY 500 = 500 companies."),
              "explain_wrong": ("30 is SENSEX. 500 is NIFTY 500. Don't mix up."),
              "mental_model": "NIFTY 50 = NSE's 50. SENSEX = BSE's 30."},
             {"q": "What does T+1 settlement mean?",
              "options": ["Settles one day after execution",
                          "Settles after 1 week", "Settles instantly"],
              "correct": 0,
-             "explain_correct": ("T = trade day. +1 = one business day for "
-                                 "delivery. India adopted T+1 in Jan 2023."),
-             "explain_wrong": ("T+0 is future. T+5 was old. T+1 = next business "
-                               "day."),
+             "explain_correct": ("T = trade day. +1 = one business day for delivery. India adopted T+1 in Jan 2023."),
+             "explain_wrong": ("T+0 is future. T+5 was old. T+1 = next business day."),
              "mental_model": "T+1 = trade today, own tomorrow."},
         ],
     },
@@ -455,30 +467,45 @@ CURRICULUM = [
                 "and got rejected.",
         "deep_lesson": [
             {"heading": "The four numbers in every candle",
-             "body": ("A candle compresses Open, High, Low, Close. Body = "
-                      "open↔close. Wicks = High/Low. Green = close>open. "
-                      "Red = close<open."),
-             "worked_example": ("Reliance: O=₹2,800, H=₹2,850, L=₹2,780, "
-                                "C=₹2,840.\nBody +₹40 green. Upper wick ₹10, "
-                                "lower wick ₹20 (buyers defended)."),
-             "pitfall": ("Wick length is often more informative than body "
-                         "color. Tiny green + huge upper wick = bearish.")},
+             "body": ("If you look at a stock chart, you don't see lines—you see candles. A candlestick compresses a massive "
+                      "amount of information into one little visual. It tells you exactly what happened during a specific time "
+                      "period (e.g., one day).\n\n"
+                      "Every candle contains four numbers:\n"
+                      "• **Open:** The price when the period started.\n"
+                      "• **Close:** The price when the period ended.\n"
+                      "• **High:** The absolute highest price reached.\n"
+                      "• **Low:** The absolute lowest price reached.\n\n"
+                      "The thick part (the Body) shows the distance between Open and Close. The thin lines (the Wicks) show the High and Low.\n"
+                      "Green = Close > Open (Buyers won). Red = Close < Open (Sellers won)."),
+             "worked_example": ("Reliance today: Open = ₹2,800, High = ₹2,850, Low = ₹2,780, Close = ₹2,840.\n"
+                                "The body is green because ₹2,840 (Close) is higher than ₹2,800 (Open).\n"
+                                "The upper wick goes up to ₹2,850, and the lower wick goes down to ₹2,780."),
+             "pitfall": ("Ignoring the wicks. A candle can be green (close > open), but if it has a massive upper wick, it means sellers "
+                         "smashed the price down from the highs. The wick often tells a more important story than the body color.")},
             {"heading": "The three candles that matter most",
-             "body": ("Doji = indecision. Hammer = long lower wick at lows "
-                      "(bullish). Shooting Star = long upper wick at highs "
-                      "(bearish). All depend on context — trend + level + "
-                      "volume."),
-             "worked_example": ("NIFTY hits 22,000 support. Candle O=22,050 "
-                                "C=22,040, L=21,850. Lower wick ₹200 = buyers "
-                                "smashed the rejection."),
-             "pitfall": ("Dojis in a range mean nothing. Context is everything.")},
+             "body": ("While there are hundreds of candlestick patterns, three are incredibly important for beginners:\n\n"
+                      "1. **Doji:** A candle where the Open and Close are almost identical. It looks like a cross. It represents "
+                      "total indecision. The buyers and sellers fought to a standstill.\n"
+                      "2. **Hammer:** A small body with a long lower wick. It happens at the bottom of a downtrend. Sellers tried "
+                      "to push it down, but buyers fought back hard. It suggests a bullish reversal.\n"
+                      "3. **Shooting Star:** A small body with a long upper wick. It happens at the top of an uptrend. Buyers "
+                      "tried to push it up, but sellers dumped it. It suggests a bearish reversal."),
+             "worked_example": ("NIFTY drops to a support level of 22,000. It forms a candle that opens at 22,050, closes at 22,040, "
+                                "but drops all the way to 21,850 during the day. This creates a massive ₹200 lower wick (a Hammer). "
+                                "The buyers have clearly stepped in to defend this price."),
+             "pitfall": ("Trading a Doji or Hammer in a vacuum. A Hammer in the middle of a random chart means nothing. These candles "
+                         "ONLY matter if they appear at key support/resistance levels or moving averages.")},
             {"heading": "Why volume is the truth serum",
-             "body": ("Volume = participation. Breakouts on LOW volume are "
-                      "traps. Same breakout on 2×+ volume is real. No volume, "
-                      "no trade."),
-             "worked_example": ("₹510 resistance. Day 1 crosses on 1.3× avg → "
-                                "weak. Day 2 crosses on 5× avg → strong."),
-             "pitfall": ("Low-volume breakouts are the #1 retail trap.")},
+             "body": ("Volume is the number of shares traded during the candle's time period. If price is the engine, volume is the fuel.\n\n"
+                      "A massive price move on low volume is a lie. It means a few retail traders pushed the price, but the big "
+                      "institutions are not participating.\n\n"
+                      "A breakout (when a stock breaks above a resistance level) is only valid if it happens on **high volume**. "
+                      "If a stock crosses ₹500 but volume is lower than average, it is likely a 'fakeout' and will crash right back down."),
+             "worked_example": ("A stock has been stuck at ₹510 resistance for weeks. On Tuesday, it crosses ₹510, but volume is "
+                                "only 1.3x the average. It's weak. On Wednesday, it crosses ₹510 again, but this time volume is "
+                                "5x the average. The breakout is real."),
+             "pitfall": ("Falling for low-volume breakouts. This is the #1 trap for retail traders. If you don't see a massive spike "
+                         "in volume, do not trust the price breakout.")},
         ],
         "key_takeaways": [
             "Every candle = OHLC. Body = open-to-close; wicks = rejections.",
@@ -498,19 +525,14 @@ CURRICULUM = [
                          "Buyers defended the low — potential reversal up",
                          "Volume is irrelevant"],
              "correct": 1,
-             "explain_correct": ("Long lower wick = sellers pushed down but "
-                                 "buyers overwhelmed and closed near top. "
-                                 "Bullish reversal at tested support."),
-             "explain_wrong": ("'Sellers in control' = shooting star. Volume "
-                               "always matters."),
+             "explain_correct": ("Long lower wick = sellers pushed down but buyers overwhelmed and closed near top. Bullish reversal at tested support."),
+             "explain_wrong": ("'Sellers in control' = shooting star. Volume always matters."),
              "mental_model": "Hammer at support = bulls planted a flag."},
             {"q": "A breakout on very low volume is usually…",
              "options": ["Very reliable", "A trap / weak signal", "Best entry"],
              "correct": 1,
-             "explain_correct": ("Low volume = low conviction. Professionals "
-                                 "wait for 1.5–2× average volume to confirm."),
-             "explain_wrong": ("'Very reliable' is backwards. 'Best entry' "
-                               "ignores failure rate."),
+             "explain_correct": ("Low volume = low conviction. Professionals wait for 1.5–2× average volume to confirm."),
+             "explain_wrong": ("'Very reliable' is backwards. 'Best entry' ignores failure rate."),
              "mental_model": "Volume is the engine."},
         ],
     },
@@ -521,62 +543,65 @@ CURRICULUM = [
                 "buyers or sellers run out of ammunition.",
         "deep_lesson": [
             {"heading": "Reading the three market states",
-             "body": ("Uptrend = higher highs + higher lows. Downtrend = lower "
-                      "highs + lower lows. Sideways = range-bound. Trade with "
-                      "the trend until a structural break."),
-             "worked_example": ("NIFTY 2023: 17,800 → 16,800 → 19,900 → 18,800 "
-                                "→ 21,700. Swing highs rising, swing lows "
-                                "rising = bullish structure."),
-             "pitfall": ("'Red day = bearish' is wrong. Trends are measured "
-                         "over swings, not days.")},
+             "body": ("Markets are always in one of three states:\n\n"
+                      "1. **Uptrend (Bull Market):** The price is making Higher Highs (peaks are higher than previous peaks) "
+                      "and Higher Lows (dips are higher than previous dips). It looks like a staircase going up.\n"
+                      "2. **Downtrend (Bear Market):** The price is making Lower Highs and Lower Lows. A staircase going down.\n"
+                      "3. **Sideways (Range-bound):** The price bounces horizontally between two levels.\n\n"
+                      "The golden rule of trading is 'The Trend is your Friend'. Do not try to fight the current trend."),
+             "worked_example": ("In 2023, NIFTY moved: 17,800 → dropped to 16,800 → rallied to 19,900 → dipped to 18,800 → rallied "
+                                "to 21,700. The dip stopped higher than the previous dip (18,800 > 16,800). The rally went higher than "
+                                "the previous rally. It was a textbook uptrend."),
+             "pitfall": ("Thinking a 'red day' means the market is bearish. Trends are measured over weeks and months using swing "
+                         "highs and swing lows, not by looking at a single red candle.")},
             {"heading": "The five drivers of trend",
-             "body": ("1. FII/DII flows, 2. RBI policy, 3. Union Budget, "
-                      "4. Earnings, 5. Global cues (US Fed, crude, China)."),
-             "worked_example": ("May 2024: exit polls → NIFTY +3% in one "
-                                "session. Driver: political stability → capex "
-                                "continuity."),
-             "pitfall": ("Chart patterns without macro context fail.")},
+             "body": ("Why do trends start? What pushes millions of people to buy or sell? There are 5 macro drivers in India:\n\n"
+                      "1. **FII/DII Flows:** Are the big institutions buying or selling?\n"
+                      "2. **RBI Policy:** Interest rates. Low rates = cheap loans = market booms. High rates = market drops.\n"
+                      "3. **Union Budget:** Government spending on infrastructure or taxes.\n"
+                      "4. **Corporate Earnings:** Are companies actually making profits?\n"
+                      "5. **Global Cues:** What is the US Federal Reserve doing? Are crude oil prices rising?"),
+             "worked_example": ("May 2024: Exit polls predicted a stable government. The market rallied 3% in a single day. The driver "
+                                "was political stability, which suggested continuity in government capex (infrastructure spending)."),
+             "pitfall": ("Looking at technical charts without looking at the news. A beautiful chart pattern will completely fail if "
+                         "the RBI announces a surprise interest rate hike.")},
             {"heading": "Support, resistance, and why they matter",
-             "body": ("Support = buyers step in. Resistance = sellers unload. "
-                      "Broken support becomes resistance. Broken resistance "
-                      "becomes support."),
-             "worked_example": ("NIFTY holds 22,000 five times. 6th test "
-                                "breaks to 21,700. Every rally back to 22,000 "
-                                "gets sold — support flipped to resistance."),
-             "pitfall": ("Heavily retested support is CLOSER to breaking, not "
-                         "safer.")},
+             "body": ("**Support** is a price floor where buyers aggressively step in. **Resistance** is a ceiling where sellers "
+                      "aggressively unload.\n\n"
+                      "But here is the magic of market psychology: when a level breaks, it flips.\n\n"
+                      "• **Broken resistance becomes support:** People who missed the breakout buy the dip to get in.\n"
+                      "• **Broken support becomes resistance:** People who bought at the floor are trapped and want to sell to "
+                      "break even when the price comes back up."),
+             "worked_example": ("NIFTY held the 22,000 level five times. On the sixth try, it broke down to 21,700. Every time it "
+                                "rallied back up to 22,000, it got sold off. The old support (22,000) had become a new resistance."),
+             "pitfall": ("Thinking heavily tested support is stronger. It's actually the opposite. Every time a support level is "
+                         "tested, the buyers defending it get exhausted. The more times it is tested, the higher the chance it breaks.")},
         ],
         "key_takeaways": [
             "Uptrend = HH + HL. Downtrend = LH + LL.",
-            "Trends driven by flows, policy, budget, earnings, global cues.",
-            "Broken support becomes resistance; vice versa.",
-            "Heavily tested support is closer to breaking.",
+            "Trends are driven by flows, policy, budget, earnings, and global cues.",
+            "Broken support becomes resistance; broken resistance becomes support.",
+            "Heavily tested support is closer to breaking, not safer.",
         ],
         "quiz": [
             {"q": "Higher highs + higher lows = ?",
              "options": ["Bearish trend", "Bullish trend", "Sideways"],
              "correct": 1,
-             "explain_correct": ("HH + HL = classic bullish structure. "
-                                 "Intact until a lower low or lower high."),
+             "explain_correct": ("HH + HL = classic bullish structure. Intact until a lower low or lower high."),
              "explain_wrong": ("Bearish is opposite. Sideways is neither."),
              "mental_model": "HH + HL = bull."},
             {"q": "FIIs sold ₹10,000 cr in a day. Likely short-term impact?",
              "options": ["NIFTY up sharply", "NIFTY down / pressure", "No effect"],
              "correct": 1,
-             "explain_correct": ("₹10k cr net selling = huge supply. DIIs "
-                                 "absorb some but downward pressure dominates."),
-             "explain_wrong": ("FIIs hold ~20% of NSE market cap. Flow "
-                               "matters."),
+             "explain_correct": ("₹10k cr net selling = huge supply. DIIs absorb some but downward pressure dominates."),
+             "explain_wrong": ("FIIs hold ~20% of NSE market cap. Flow matters."),
              "mental_model": "Big money exits → market feels weight."},
             {"q": "Price bounces 5 times off ₹500 then breaks below. This is…",
              "options": ["Support holding", "Support breakdown — bearish",
                          "Bullish"],
              "correct": 1,
-             "explain_correct": ("Heavily retested support weakens. Break "
-                                 "becomes resistance. Sharp move due to stop "
-                                 "clusters."),
-             "explain_wrong": ("'Holding' would require a bounce. 'Bullish' is "
-                               "the opposite."),
+             "explain_correct": ("Heavily retested support weakens. Break becomes resistance. Sharp move due to stop clusters."),
+             "explain_wrong": ("'Holding' would require a bounce. 'Bullish' is the opposite."),
              "mental_model": "N tests = N reasons to break."},
         ],
     },
@@ -587,68 +612,74 @@ CURRICULUM = [
                 "blowing up on the losers.",
         "deep_lesson": [
             {"heading": "The 1% rule (and why it's non-negotiable)",
-             "body": ("Risk 1–2% per trade max. 10 losses at 5% = −40% "
-                      "(need +67% to recover). 10 losses at 1% = −10% (need "
-                      "+11%). Survival math > win-rate vanity."),
-             "worked_example": ("₹1,00,000 capital. 1% = ₹1,000 max loss. "
-                                "5 losses = −₹5,000 = still alive.\n5% = "
-                                "₹5,000 max loss. 5 losses = −₹25,000 = deep "
-                                "hole."),
-             "pitfall": ("Sizing by confidence is backwards. Size by risk.")},
+             "body": ("Most beginners focus on 'How much money can I make?' Professionals focus on 'How much can I lose?'\n\n"
+                      "The golden rule of trading is to **never risk more than 1% to 2% of your total capital on a single trade**.\n\n"
+                      "Why? Because of the brutal math of drawdowns. If you lose 50% of your account, you need to make 100% just to "
+                      "get back to where you started. If you risk 10% per trade and hit a losing streak of 5 trades, you are down 50%. "
+                      "But if you risk 1% per trade, a 5-trade losing streak only puts you down 5%, which is easily recoverable."),
+             "worked_example": ("You have ₹1,00,000. You risk 1% (₹1,000) per trade. You lose 5 trades in a row. You are down ₹5,000. "
+                                "You still have ₹95,000.\n"
+                                "If you risked 5% (₹5,000) per trade and lost 5 in a row, you would be down ₹25,000 (25% of your account)."),
+             "pitfall": ("Sizing your trades based on how confident you feel. Confidence is an emotion. Position size must be "
+                         "calculated mathematically based on your stop-loss distance, not your gut feeling.")},
             {"heading": "Position sizing — the formula that saves you",
-             "body": ("Position Size = (Capital × Risk%) ÷ (Entry − Stop). "
-                      "Numerator = money risk. Denominator = price risk per "
-                      "share."),
-             "worked_example": ("Capital ₹1L, risk 1% = ₹1,000. Entry ₹500, "
-                                "stop ₹480, per-share risk ₹20. Position = "
-                                "1000 ÷ 20 = 50 shares."),
-             "pitfall": ("Buying round numbers instead of computed size.")},
+             "body": ("How do you actually apply the 1% rule? You use a formula to calculate exactly how many shares to buy.\n\n"
+                      "**The Formula:**\n"
+                      "(Total Capital × Risk %) ÷ (Entry Price − Stop Loss Price) = Number of Shares\n\n"
+                      "This ensures that if your stop loss is hit, you lose exactly the amount you planned to risk, no more."),
+             "worked_example": ("Capital: ₹1,00,000. Risk: 1% (₹1,000).\n"
+                                "You want to buy a stock at ₹500. Your stop loss is at ₹480.\n"
+                                "Risk per share = ₹20.\n"
+                                "Position Size = 1000 ÷ 20 = 50 shares.\n"
+                                "If the stock drops to ₹480, you lose exactly ₹1,000."),
+             "pitfall": ("Buying round numbers like 100 shares or 500 shares without calculating. If you buy 500 shares in the above "
+                         "example, your risk is ₹10,000 (10% of your account). One bad trade could wipe out a month of gains.")},
             {"heading": "Risk:Reward — the only equation that matters",
-             "body": ("1:1 R:R needs >50% win rate. 1:3 R:R needs only 25% win "
-                      "rate. Minimum acceptable R:R = 1:2."),
-             "worked_example": ("Strategy A: 60% win, 1:1 = +0.20R.\n"
-                                "Strategy B: 40% win, 1:3 = +0.60R. B is 3× "
-                                "more profitable."),
-             "pitfall": ("Chasing high win rates misses the point.")},
+             "body": ("You do not need to be right more than 50% of the time to make money. You just need a good **Risk:Reward (R:R) ratio**.\n\n"
+                      "R:R compares how much you stand to gain vs how much you stand to lose.\n"
+                      "• A 1:1 ratio means you risk ₹1 to make ₹1. You need >50% win rate to survive.\n"
+                      "• A 1:2 ratio means you risk ₹1 to make ₹2. You only need a 34% win rate to break even!\n"
+                      "• A 1:3 ratio means you risk ₹1 to make ₹3. You only need a 25% win rate."),
+             "worked_example": ("Strategy A: Win rate 60%, but R:R is 1:1. Over 10 trades: 6 wins (+6) - 4 losses (-4) = +2 units profit.\n"
+                                "Strategy B: Win rate 40%, but R:R is 1:3. Over 10 trades: 4 wins (+12) - 6 losses (-6) = +6 units profit.\n"
+                                "Strategy B is 3x more profitable, even though you lose more often!"),
+             "pitfall": ("Taking trades where the target is too close. If you risk ₹10 to make ₹5 (1:0.5), one single loss will wipe out "
+                         "two of your wins. Never take a trade unless the potential reward is at least twice your risk (1:2).")},
             {"heading": "The rules that never bend",
-             "body": ("1. Stop-loss always. 2. Never average a loser. 3. Two "
-                      "losses → stop for day. 4. No FOMO. 5. Journal every "
-                      "trade."),
-             "worked_example": ("Entry ₹500, stop ₹490, target ₹530 (1:3). "
-                                "Stop executed at ₹489.80 with slippage — "
-                                "loss ₹10.20 instead of ₹10."),
-             "pitfall": ("'I'll just watch it and exit if it drops' always "
-                         "fails.")},
+             "body": ("To survive long-term, you must build rules and never break them:\n\n"
+                      "1. **Always use a stop-loss.** No exceptions.\n"
+                      "2. **Never average a loser.** If a stock goes against you, don't buy more to 'bring down the average'. Cut the loss.\n"
+                      "3. **Two losses = stop for the day.** When you lose, emotion takes over. Protect yourself from revenge trading.\n"
+                      "4. **No FOMO.** If you missed the move, let it go. There is always another trade."),
+             "worked_example": ("You buy at ₹500 with a stop at ₹490. The next day, news breaks, the stock crashes, and you get filled at "
+                                "₹489.80. Because you used a stop-loss, you lost ₹10.20 per share. If you didn't use a stop, that stock might "
+                                "have dropped to ₹400, wiping out 20% of your account."),
+             "pitfall": ("Thinking 'I will just watch it and sell if it drops too much.' Human psychology makes this impossible. When "
+                         "you are losing money, your brain goes into denial. You will hold the loser until it becomes a disaster.")},
         ],
         "key_takeaways": [
-            "Risk 1–2% per trade.",
+            "Risk 1–2% of your total capital per trade.",
             "Size = (Capital × Risk%) ÷ (Entry − Stop).",
-            "R:R ≥ 1:2. 1:3 at 40% win = better than 1:1 at 60%.",
-            "Stop-loss on every trade.",
+            "R:R ≥ 1:2. A 1:3 strategy at 40% win rate is better than a 1:1 at 60%.",
+            "Stop-loss on every single trade.",
         ],
         "quiz": [
             {"q": "Capital ₹50,000, risk 2%, entry ₹100, stop ₹95. Position size?",
              "options": ["100 shares", "200 shares", "500 shares"],
              "correct": 1,
-             "explain_correct": ("Risk = 2% × 50k = ₹1,000. Per-share risk "
-                                 "₹5. Position = 200 shares. Loss if stopped = "
-                                 "₹1,000 = exactly 2%."),
+             "explain_correct": ("Risk = 2% × 50k = ₹1,000. Per-share risk ₹5. Position = 200 shares. Loss if stopped = ₹1,000 = exactly 2%."),
              "explain_wrong": ("100 = 1% too small. 500 = 5% too much."),
              "mental_model": "Size = Capital×Risk ÷ (Entry−Stop)."},
             {"q": "Which R:R is usually profitable even at 40% win rate?",
              "options": ["1:1", "1:2", "1:0.5"], "correct": 1,
-             "explain_correct": ("1:2 at 40% = +0.20R per trade. Positive "
-                                 "expectancy with losing win rate."),
-             "explain_wrong": ("1:1 at 40% = −0.20R. 1:0.5 = −0.40R. Both "
-                               "losing."),
+             "explain_correct": ("1:2 at 40% = +0.20R per trade. Positive expectancy with losing win rate."),
+             "explain_wrong": ("1:1 at 40% = −0.20R. 1:0.5 = −0.40R. Both losing."),
              "mental_model": "1:2 or better."},
             {"q": "When should you trade without a stop-loss?",
              "options": ["When very confident", "Never", "On small positions"],
              "correct": 1,
-             "explain_correct": ("Never. Confidence isn't an edge. Stops = "
-                                 "survival."),
-             "explain_wrong": ("'Confident' trades lose big. Small positions "
-                               "train bad habits."),
+             "explain_correct": ("Never. Confidence isn't an edge. Stops = survival."),
+             "explain_wrong": ("'Confident' trades lose big. Small positions train bad habits."),
              "mental_model": "No stop = no trade."},
         ],
     },
@@ -658,61 +689,54 @@ CURRICULUM = [
         "hook": "The market isn't rigged against you. Your own brain is.",
         "deep_lesson": [
             {"heading": "The four biases that destroy portfolios",
-             "body": ("FOMO — buying tops. Revenge trading — doubling down "
-                      "after loss. Confirmation bias — only reading bullish "
-                      "news. Anchoring — holding losers because 'it was "
-                      "higher once'."),
-             "worked_example": ("Zomato 2021 peak ~₹160. Trader buys ₹150, "
-                                "refuses to sell at ₹100, ₹80, ₹60. Two years "
-                                "later still holding −60%."),
-             "pitfall": ("'I'm logical' — everyone says this. Everyone is "
-                         "wrong.")},
+             "body": ("The hardest part of trading isn't math—it's psychology. Your brain is wired to make bad financial decisions:\n\n"
+                      "• **FOMO (Fear of Missing Out):** Buying an asset just because it's going up fast and everyone is talking about it. You always buy the top.\n"
+                      "• **Revenge Trading:** You lose ₹5,000, get angry, and immediately double your position size to win it back. You almost always lose more.\n"
+                      "• **Confirmation Bias:** You bought a stock, so now you only read news articles that agree with you, ignoring all the red flags.\n"
+                      "• **Anchoring:** You refuse to sell a stock because 'it used to be ₹500'. The market doesn't care what it used to be."),
+             "worked_example": ("Zomato peaked around ₹160 in 2021. A trader bought at ₹150. It dropped to ₹100, but he refused to sell because he was 'anchored' to the ₹150 price. Two years later, it was at ₹60. He lost 60% of his money waiting to 'break even'."),
+             "pitfall": ("Thinking 'I am a logical person, I won't fall for these'. Everyone says this. The human brain is biologically wired for these biases. You need rules to protect yourself from yourself.")},
             {"heading": "Drawdown math — why 50% down is not 50% up",
-             "body": ("−50% needs +100% to recover. −75% needs +300%. −90% "
-                      "needs +900%. Losses are asymmetric. Real Indian "
-                      "drawdowns: 2008 −60%, 2020 −38%, 2022 −17%."),
-             "worked_example": ("₹10L → ₹5L. Recovery at +12% CAGR = 6 years "
-                                "just to flat. Inflation ran ~30% meanwhile."),
-             "pitfall": ("'I'll wait it out' without a plan = panic-sell at "
-                         "bottom.")},
+             "body": ("Losses in the market are asymmetric. This means it takes much more effort to recover from a loss than it does to make the money in the first place.\n\n"
+                      "• If you lose 10%, you need a 11.1% gain to break even.\n"
+                      "• If you lose 50%, you need a 100% gain to break even.\n"
+                      "• If you lose 90%, you need a 900% gain to break even.\n\n"
+                      "This is why protecting your capital is rule #1. A massive drawdown can trap you for decades."),
+             "worked_example": ("You have ₹10 Lakhs. The market crashes and you drop to ₹5 Lakhs (a 50% drawdown). Your money now needs to double (a 100% return) just to get back to where you started. If the market averages a 12% return per year, it will take you 6 years just to break even, losing all that time to inflation."),
+             "pitfall": ("Saying 'I will just hold and wait for it to recover' without a plan. If you don't have a stop-loss or risk management, you might panic and sell at the absolute bottom.")},
             {"heading": "Why journaling works (and how to do it)",
-             "body": ("Log: time, asset, size, reason, emotion, R:R, outcome, "
-                      "lesson. Review weekly for behavioral patterns, not P&L."),
-             "worked_example": ("30-day review reveals 12 of 15 losses came "
-                                "after a previous loss. Diagnosis: revenge "
-                                "trading. Fix: 30-min cool-down rule."),
-             "pitfall": ("Journaling without reviewing is just record-keeping.")},
+             "body": ("If you want to improve, you must keep a trading journal. But it's not just a record of your profits and losses.\n\n"
+                      "For every trade, log:\n"
+                      "• Why you entered the trade (the setup).\n"
+                      "• How you were feeling (calm, angry, rushed?)\n"
+                      "• The Risk:Reward ratio.\n\n"
+                      "Once a week, review the journal. Look for behavioral patterns. Are your losses always happening after lunch? Are your biggest losses always right after a previous loss?"),
+             "worked_example": ("A trader reviews his 30-day journal and realizes that 12 out of his 15 losing trades happened immediately after a previous loss. Diagnosis: Revenge trading. Solution: He implements a rule to wait 1 hour after any loss before taking a new trade."),
+             "pitfall": ("Journaling but never reviewing it. A journal without a weekly review is just a diary. The magic is in finding the patterns and changing your behavior.")},
         ],
         "key_takeaways": [
-            "FOMO, revenge, confirmation bias, anchoring — know them.",
-            "50% drawdown needs +100% recovery.",
-            "Journal every trade. Review weekly.",
-            "Define max drawdown tolerance BEFORE investing.",
+            "FOMO, revenge trading, confirmation bias, and anchoring are constantly fighting your logic.",
+            "A 50% drawdown requires a 100% gain just to recover.",
+            "Journal every trade. Review it weekly to find your emotional patterns.",
+            "Define your maximum drawdown tolerance BEFORE you invest.",
         ],
         "quiz": [
-            {"q": "You lost ₹5,000 today and immediately double your next "
-                  "trade to win it back. This is…",
+            {"q": "You lost ₹5,000 today and immediately double your next trade to win it back. This is…",
              "options": ["Smart", "Revenge trading", "Position sizing"],
              "correct": 1,
-             "explain_correct": ("Revenge trading — emotion hijacks decision. "
-                                 "Trade based on 'getting even', not setup."),
-             "explain_wrong": ("'Smart' doubles risk when compromised. "
-                               "'Sizing' is disciplined; this is the opposite."),
+             "explain_correct": ("Revenge trading — emotion hijacks decision. Trade based on 'getting even', not setup."),
+             "explain_wrong": ("'Smart' doubles risk when compromised. 'Sizing' is disciplined; this is the opposite."),
              "mental_model": "After loss, size down or sit out."},
             {"q": "A 50% drawdown requires what gain to recover?",
              "options": ["50%", "75%", "100%"], "correct": 2,
-             "explain_correct": ("₹100 → ₹50 needs +100% to return to ₹100. "
-                                 "−75% needs +300%. −90% needs +900%."),
+             "explain_correct": ("₹100 → ₹50 needs +100% to return to ₹100. −75% needs +300%. −90% needs +900%."),
              "explain_wrong": ("50% of ₹50 = ₹25, not enough. 75% arbitrary."),
              "mental_model": "Lose 50% → need +100%."},
             {"q": "Holding a losing stock because 'it was higher once' is…",
              "options": ["Anchoring bias", "Good strategy", "Value investing"],
              "correct": 0,
-             "explain_correct": ("Anchoring — clinging to a past price. Market "
-                                 "doesn't know your entry. Evaluate on today's "
-                                 "merits."),
-             "explain_wrong": ("'Good' = no. 'Value investing' = fundamentals, "
-                               "not price nostalgia."),
+             "explain_correct": ("Anchoring — clinging to a past price. Market doesn't know your entry. Evaluate on today's merits."),
+             "explain_wrong": ("'Good' = no. 'Value investing' = fundamentals, not price nostalgia."),
              "mental_model": "Market doesn't know your entry."},
         ],
     },
@@ -723,68 +747,57 @@ CURRICULUM = [
                 "teaches them to you.",
         "deep_lesson": [
             {"heading": "STCG vs. LTCG — the 12-month line",
-             "body": ("STCG (<12mo): 20% + surcharge + cess. LTCG (≥12mo): "
-                      "12.5% above ₹1.25L annual exemption. Cliff at 12 "
-                      "months."),
-             "worked_example": ("100 shares @ ₹1,000 → sold 8 months @ ₹1,300: "
-                                "+₹30,000 STCG = ₹6,000 tax.\nSold 13 months: "
-                                "LTCG exemption unused = ₹0 tax. ₹6,000 saved "
-                                "by waiting."),
-             "pitfall": ("Selling on day 360 wastes 20% vs. 12.5% rate.")},
+             "body": ("The Indian government taxes your stock market profits based on how long you hold the stock.\n\n"
+                      "• **STCG (Short-Term Capital Gains):** If you hold a stock for less than 12 months, it is taxed at 20%.\n"
+                      "• **LTCG (Long-Term Capital Gains):** If you hold it for more than 12 months, it is taxed at 12.5%, but you only pay tax on profits above ₹1.25 Lakh per year.\n\n"
+                      "The government is rewarding you for being a long-term investor."),
+             "worked_example": ("You buy shares at ₹1,000 and sell at ₹1,300 (a ₹30,000 profit).\n"
+                                "• If you sell in 8 months (STCG), you pay 20% tax = ₹6,000.\n"
+                                "• If you wait 13 months (LTCG), the first ₹1.25 Lakh of profits are tax-free. You pay ₹0 tax. You saved ₹6,000 just by waiting."),
+             "pitfall": ("Selling a stock at 11 months just because you need the money. By holding for 30 more days, your tax rate drops dramatically. Always check your holding period before selling.")},
             {"heading": "Intraday & F&O — different tax world",
-             "body": ("Treated as business income, not capital gains. Slab "
-                      "rate 5–30%. Books required. Expenses deductible."),
-             "worked_example": ("₹5L intraday + ₹15L salary = ₹20L total. "
-                                "Intraday taxed at ~30% = ₹1,50,000.\nIf held "
-                                "long-term LTCG: ₹5L − ₹1.25L × 12.5% = "
-                                "₹46,875. Difference ₹1L+."),
-             "pitfall": ("'F&O tax-free if not withdrawn' is false. Realized "
-                         "gains in FY are taxed.")},
+             "body": ("If you buy and sell a stock on the same day (Intraday), or trade Futures & Options (F&O), the tax rules change completely.\n\n"
+                      "The government does not consider this 'investing'. They consider it a **business**.\n\n"
+                      "This means your profits are added to your total income and taxed at your normal income tax slab rate (which can be 30%+ if you earn well). You also have to maintain books of accounts."),
+             "worked_example": ("You make ₹5 Lakhs in F&O trading and have a ₹15 Lakh salary. Your total income is ₹20 Lakhs. The ₹5 Lakh is taxed at the highest slab (roughly 30%), meaning you owe ₹1.5 Lakh in tax. If you had held those trades as long-term investments, the tax would be much lower."),
+             "pitfall": ("Thinking 'If I don't withdraw the money from my broker, it's not taxed'. Realized gains are taxed at the end of the financial year regardless of whether you withdrew the cash or left it in your trading account.")},
             {"heading": "The paperwork you must know",
-             "body": ("AIS = IT Dept record of trades/dividends. TIS = summary. "
-                      "STT auto-deducted. KYC mandatory. Schedule CG in ITR."),
-             "worked_example": ("200 trades @ ₹50,000 turnover = ₹1cr. STT "
-                                "@0.1% both sides ≈ ₹20,000. Plus brokerage + "
-                                "GST."),
-             "pitfall": ("Not reconciling AIS with your records = notice.")},
+             "body": ("The Income Tax Department of India is now highly automated.\n\n"
+                      "• **AIS (Annual Information Statement):** A digital record the tax department keeps of all your stock trades, dividends, and mutual fund redemptions.\n"
+                      "• **TIS (Taxpayer Information Summary):** A summary of your AIS.\n"
+                      "• **STT (Securities Transaction Tax):** An automatic tax deducted by the broker on every trade."),
+             "worked_example": ("If you make 200 trades in a year, the AIS automatically pulls this data from the stock exchange. When you file your ITR (Income Tax Return), you must reconcile your personal records with the AIS. If they don't match, the tax department sends you an automated notice."),
+             "pitfall": ("Ignoring the AIS. Always download your AIS from the income tax portal before filing your returns to ensure the data matches your trading journal.")},
             {"heading": "What SEBI bans — the red lines",
-             "body": ("Insider trading, market manipulation, unregistered "
-                      "advisory, front-running. Fines + imprisonment up to "
-                      "10 years."),
-             "worked_example": ("2023: Telegram channel fined ₹40 cr for "
-                                "unregistered advisory with 30k subscribers — "
-                                "pump-and-dump."),
-             "pitfall": ("'Just sharing analysis' for any consideration can be "
-                         "unregistered advice.")},
+             "body": ("SEBI is extremely strict about market integrity. If you cross these lines, you can face massive fines and jail time:\n\n"
+                      "• **Insider Trading:** Trading on confidential information (like a company's earnings) before it is made public.\n"
+                      "• **Market Manipulation:** Pumping up the price of a stock with fake news so you can sell your shares to unsuspecting people.\n"
+                      "• **Unregistered Advisory:** Giving paid stock tips without a SEBI license."),
+             "worked_example": ("In 2023, SEBI fined a Telegram channel ₹40 crore for running an unregistered advisory. They were pumping up small-cap stocks to their 30,000 subscribers, and then selling their own shares at the high prices (a pump-and-dump scheme)."),
+             "pitfall": ("Paying for 'sure shot' stock tips on WhatsApp or Telegram. If the tip is truly guaranteed, the person would be a billionaire, not selling tips for ₹5,000 a month.")},
         ],
         "key_takeaways": [
-            "STCG 20%, LTCG 12.5% above ₹1.25L.",
-            "Intraday & F&O = business income at slab rate.",
-            "AIS/TIS auto-report trades.",
-            "Insider trading = SEBI red line, criminal offense.",
+            "STCG is 20%, LTCG is 12.5% above ₹1.25L.",
+            "Intraday & F&O are treated as business income at your slab rate.",
+            "The AIS/TIS auto-reports your trades to the tax department.",
+            "Insider trading is a criminal offense with up to 10 years of imprisonment.",
         ],
         "quiz": [
             {"q": "Bought 1 Jan 2024, sold 1 Mar 2024. Tax type?",
              "options": ["LTCG", "STCG", "No tax"], "correct": 1,
-             "explain_correct": ("Held ~2 months < 12 → STCG @ 20%. No 'no "
-                                 "tax' threshold for STCG."),
-             "explain_wrong": ("LTCG requires ≥12 months. STCG taxable from "
-                               "rupee 1."),
+             "explain_correct": ("Held ~2 months < 12 → STCG @ 20%. No 'no tax' threshold for STCG."),
+             "explain_wrong": ("LTCG requires ≥12 months. STCG taxable from rupee 1."),
              "mental_model": "Under 12 months = STCG."},
             {"q": "LTCG on equity above ₹1.25 lakh is taxed at…",
              "options": ["10%", "12.5%", "20%"], "correct": 1,
-             "explain_correct": ("12.5% as per FY 2024-25 (was 10%). Exemption "
-                                 "resets annually."),
+             "explain_correct": ("12.5% as per FY 2024-25 (was 10%). Exemption resets annually."),
              "explain_wrong": ("10% = old rate. 20% = STCG rate."),
              "mental_model": "LTCG equity = 12.5% above ₹1.25L."},
             {"q": "Which is illegal per SEBI?",
              "options": ["Long-term investing", "Insider trading", "Index funds"],
              "correct": 1,
-             "explain_correct": ("Insider trading = criminal offense. Fines "
-                                 "up to ₹25 cr or 3× profit + imprisonment "
-                                 "up to 10 years."),
-             "explain_wrong": ("Long-term investing and index funds are "
-                               "encouraged by SEBI."),
+             "explain_correct": ("Insider trading = criminal offense. Fines up to ₹25 cr or 3× profit + imprisonment up to 10 years."),
+             "explain_wrong": ("Long-term investing and index funds are encouraged by SEBI."),
              "mental_model": "Insider info + trade = jail."},
         ],
     },
@@ -795,75 +808,60 @@ CURRICULUM = [
                 "time, direction, and volatility.",
         "deep_lesson": [
             {"heading": "Options = rights, not obligations",
-             "body": ("Call (CE) = right to buy. Put (PE) = right to sell. "
-                      "Buyer pays premium, has defined risk (max loss = "
-                      "premium). Writer collects premium, has unlimited risk."),
-             "worked_example": ("NIFTY spot 22,000. Buy 22,000 CE @ ₹100, lot "
-                                "25 → cost ₹2,500.\nNIFTY → 22,300: CE ≈ ₹300 "
-                                "→ +₹5,000.\nNIFTY → 21,700: CE = ₹0 → −₹2,500."),
-             "pitfall": ("Options decay every day. Flat markets lose for "
-                         "buyers.")},
+             "body": ("Options are one of the most misunderstood instruments in the market. They are not cheap stocks. They are contracts.\n\n"
+                      "• **Call Option (CE):** The right to BUY a stock at a fixed price.\n"
+                      "• **Put Option (PE):** The right to SELL a stock at a fixed price.\n\n"
+                      "When you buy an option, you pay a fee (the **Premium**). You have the right to exercise the contract, but not the obligation. If the trade goes wrong, your maximum loss is just the premium you paid. If it goes right, the profits can be massive."),
+             "worked_example": ("NIFTY is at 22,000. You buy a 22,000 Call Option for ₹100 (Lot size is 25, so you pay ₹2,500).\n"
+                                "• If NIFTY shoots up to 22,300, the Call is worth ₹300. You make ₹7,500 (₹300 - ₹100 = ₹200 profit × 25).\n"
+                                "• If NIFTY drops to 21,700, the Call expires worthless. You lose only the ₹2,500 you paid."),
+             "pitfall": ("Thinking options are a 'get rich quick' scheme. Options are decaying assets. Every single day that passes, the premium loses value, even if the market stays flat. Flat market = you lose money.")},
             {"heading": "Greeks — the language of options",
-             "body": ("Delta = price sensitivity per ₹1 move. Gamma = Δ's rate "
-                      "of change. Theta = daily time decay (kills buyers). "
-                      "Vega = IV sensitivity."),
-             "worked_example": ("Δ=0.5, Θ=−15/day. NIFTY +100: gain ₹50. "
-                                "NIFTY flat: lose ₹15/day. 5 flat days = "
-                                "−₹75 per unit."),
-             "pitfall": ("Buying before events → IV crush after. Even correct "
-                         "direction can lose.")},
+             "body": ("To trade options, you must understand the Greeks. They measure how the option's price will change:\n\n"
+                      "• **Delta:** How much the price changes if the market moves ₹1.\n"
+                      "• **Theta:** Time decay. The amount of money the option loses every single day just from the passage of time.\n"
+                      "• **Vega:** Volatility. How much the price changes based on fear/greed in the market.\n"
+                      "• **Gamma:** The rate at which Delta changes."),
+             "worked_example": ("You hold an option with a Delta of 0.5 and a Theta of -15. If the NIFTY goes up ₹100, you make ₹50 (because of Delta). If the NIFTY stays completely flat, you still lose ₹15 that day (because of Theta). Five flat days in a row = ₹75 loss per unit."),
+             "pitfall": ("Buying options right before a major event (like an election or earnings). The market prices in massive volatility (high Vega), making the premium very expensive. Once the event passes, volatility crushes, and the premium drops instantly, even if the direction was correct.")},
             {"heading": "Indian F&O market reality",
-             "body": ("NIFTY weekly = Thu expiry, brutal theta. Bank NIFTY "
-                      "monthly = last Thu. Lot sizes: NIFTY 25, Bank NIFTY 15. "
-                      "SEBI 2023: 89% of retail F&O traders lost money."),
-             "worked_example": ("10 trades/week @ ₹100 × 25 lots = ₹25,000 "
-                                "premium. 6 losers = −₹15,000/wk = ₹60,000/mo. "
-                                "Plus brokerage + STT."),
-             "pitfall": ("'Just 1 lot to learn' = ₹2,500–₹5,000/trade. Paper "
-                         "trade 3–6 months first.")},
+             "body": ("The Futures and Options (F&O) segment is insanely popular in India, but the reality is brutal.\n\n"
+                      "NIFTY options expire every Thursday. The last 2 days before expiry experience absolute brutal time decay (Theta). In a SEBI study from 2023, it was revealed that **89% of retail F&O traders lost money**. The average loss was ₹1.1 Lakh per trader."),
+             "worked_example": ("You trade 10 options a week. Each trade costs ₹25,000 in premium. You win 4 and lose 6. Your winners bring in ₹20,000, but your losers wipe out ₹30,000. You are down ₹10,000 in one week. Add brokerage and STT, and the loss is even bigger."),
+             "pitfall": ("Trading F&O with real money just because you watched a YouTube video. The lot sizes are massive (NIFTY = 25, Bank NIFTY = 15). One mistake can wipe out your entire trading capital. Always paper trade first.")},
             {"heading": "When options make sense",
-             "body": ("Hedging (protective puts), covered calls (income), "
-                      "portfolio protection. Naked writing is where retail "
-                      "blows up — unlimited tail risk."),
-             "worked_example": ("Hold ₹5L NIFTY stocks. Buy NIFTY put ₹2,500 "
-                                "(0.5%). NIFTY −5% → stocks −₹25,000, put "
-                                "+₹20,000 → net −₹7,500 instead of −₹25,000."),
-             "pitfall": ("Naked writing looks like easy income until a tail "
-                         "event wipes out months of premium.")},
+             "body": ("If 89% of people lose money, why trade options at all?\n\n"
+                      "Options are incredible tools for **Hedging** (protecting your portfolio).\n\n"
+                      "If you have a ₹5 Lakh portfolio of NIFTY stocks and you are worried about a market crash, you can buy a Put Option. If the market crashes, your stocks lose value, but your Put option makes money, offsetting the loss. You can also use Covered Calls to generate extra income on stocks you already own."),
+             "worked_example": ("You hold ₹5 Lakhs of NIFTY stocks. You buy a protective Put for ₹2,500. The market suddenly drops 5%. Your stocks lose ₹25,000. But your Put option gains ₹20,000. Your net loss is only ₹7,500 instead of ₹25,000."),
+             "pitfall": ("Naked writing (selling options without holding the underlying asset). It feels like easy income—you collect premium every week. But one massive market crash can result in unlimited losses that wipe out months of gains in a single day.")},
         ],
         "key_takeaways": [
-            "Options = rights not obligations. Buyers risk premium only.",
-            "Theta kills buyers daily. Flat = loss for buyers.",
-            "IV crush after events hurts even correct views.",
-            "89% of Indian retail F&O traders lose money.",
+            "Options are rights, not obligations. Buyers risk only the premium.",
+            "Theta (time decay) kills option buyers daily. A flat market = a loss.",
+            "IV crush after events destroys premiums, even if your direction is right.",
+            "89% of Indian retail F&O traders lose money. Paper trade before risking real cash.",
         ],
         "quiz": [
             {"q": "You expect NIFTY to rise. What do you buy?",
              "options": ["Put (PE)", "Call (CE)", "Both"], "correct": 1,
-             "explain_correct": ("Call = right to buy. Bullish bet with "
-                                 "defined risk."),
-             "explain_wrong": ("Put = bearish. Both = straddle, loses to theta "
-                               "in flat markets."),
+             "explain_correct": ("Call = right to buy. Bullish bet with defined risk."),
+             "explain_wrong": ("Put = bearish. Both = straddle, loses to theta in flat markets."),
              "mental_model": "Bullish → Call. Bearish → Put."},
             {"q": "NIFTY 22,000 CE premium = ₹100. NIFTY ends 21,800. Loss?",
              "options": ["₹100 (premium)", "₹200", "Nothing"], "correct": 0,
-             "explain_correct": ("CE expires worthless (spot < strike). Lose "
-                                 "premium = max loss as buyer."),
-             "explain_wrong": ("₹200 impossible as buyer. 'Nothing' wrong — "
-                               "you lose premium."),
+             "explain_correct": ("CE expires worthless (spot < strike). Lose premium = max loss as buyer."),
+             "explain_wrong": ("₹200 impossible as buyer. 'Nothing' wrong — you lose premium."),
              "mental_model": "Buyer's max loss = premium."},
             {"q": "What is 'theta' in options?",
              "options": ["Interest rate", "Time decay of premium", "Volatility"],
              "correct": 1,
-             "explain_correct": ("Theta = daily time decay. Accelerates near "
-                                 "expiry — final week is brutal for buyers."),
+             "explain_correct": ("Theta = daily time decay. Accelerates near expiry — final week is brutal for buyers."),
              "explain_wrong": ("Interest rate ≈ rho. Volatility ≈ vega."),
              "mental_model": "Theta = time tax on buyers."},
         ],
     },
 ]
-
-
 # ============================================================================
 # ACHIEVEMENTS
 # ============================================================================
@@ -997,7 +995,9 @@ def init_state():
         # Meta
         "xp": 0, "achievements": [], "page": "Learn",
         "selected_chapter": None, "feedback": None,
+        "_restored_this_session": False,        
     }
+    
     for k, v in defaults.items():
         if k not in st.session_state:
             st.session_state[k] = v
@@ -1020,13 +1020,9 @@ if not st.session_state.get("instrument_history"):
         for tk in tickers
     }
 
-
 # ============================================================================
-# PERSISTENCE — per-browser via localStorage (survives refresh, isolated)
+# PERSISTENCE — native JSON Export / Import (no localStorage, no loops)
 # ============================================================================
-# NOTE: Streamlit Cloud runs all visitors in one shared container.
-# Writing to disk would leak progress across users.
-# localStorage is scoped to the user's own browser — perfect for this use case.
 
 PERSIST_KEYS = [
     "xp", "completed_chapters", "chapter_stage", "unlocked_capital",
@@ -1037,77 +1033,39 @@ PERSIST_KEYS = [
     "options_book", "options_history", "bias_flags", "onboarded",
 ]
 
-_STORAGE_KEY = "finspire_v4_progress"
-
-def _serialize_state():
-    """Convert the relevant session state to a JSON string."""
+def export_progress_bytes():
+    """Pack the current session state into a JSON file."""
     snapshot = {k: st.session_state.get(k) for k in PERSIST_KEYS}
-    snapshot["_saved_at"] = datetime.now().isoformat()
-    return json.dumps(snapshot, default=str, separators=(",", ":"))
+    snapshot["_exported_at"] = datetime.now().isoformat()
+    snapshot["_app"] = "FinSpire v4.0"
+    return json.dumps(snapshot, indent=2, default=str).encode("utf-8")
 
-def _deserialize_state(raw: str) -> bool:
-    """Restore session state from a JSON string."""
+def import_progress_from_bytes(raw: bytes) -> bool:
+    """Restore session state from an uploaded JSON file."""
     try:
-        data = json.loads(raw)
-        if not isinstance(data, dict):
-            return False
-        for k in PERSIST_KEYS:
-            if k in data:
-                st.session_state[k] = data[k]
-        # Ensure instruments exist after import
-        for cls, tickers in INSTRUMENTS.items():
-            for tk, meta in tickers.items():
-                st.session_state.instrument_prices.setdefault(tk, meta["base"])
-                st.session_state.instrument_history.setdefault(tk, [])
-        return True
+        data = json.loads(raw.decode("utf-8"))
     except Exception:
         return False
+    if not isinstance(data, dict):
+        return False
+    for k in PERSIST_KEYS:
+        if k in data:
+            st.session_state[k] = data[k]
+    # Ensure instruments exist after import
+    for cls, tickers in INSTRUMENTS.items():
+        for tk, meta in tickers.items():
+            st.session_state.instrument_prices.setdefault(tk, meta["base"])
+            st.session_state.instrument_history.setdefault(tk, [])
+    return True
 
-def save_to_local_storage():
-    """Write the current state to the browser's localStorage."""
-    payload = _serialize_state()
-    safe = payload.replace("\\", "\\\\").replace("'", "\\'")
-    js = f"window.localStorage.setItem('{_STORAGE_KEY}', '{safe}')"
-    streamlit_js_eval(js_expressions=js, key="save_progress_js")
-
-def load_from_local_storage():
-    """Read state from localStorage and restore it if present."""
-    raw = streamlit_js_eval(
-        js_expressions=f"window.localStorage.getItem('{_STORAGE_KEY}')",
-        key="load_progress_js",
-    )
-    if raw and isinstance(raw, str) and raw != "null":
-        return _deserialize_state(raw)
-    return False
-
-def clear_local_storage():
-    """Remove the saved state from this browser."""
-    streamlit_js_eval(
-        js_expressions=f"window.localStorage.removeItem('{_STORAGE_KEY}')",
-        key="clear_progress_js",
-    )
-
-
-# ── Auto-restore from localStorage on first load (per browser) ──
-# streamlit_js_eval is async: the first call returns None, and the real
-# value arrives on the next rerun. So we trigger one rerun if needed.
-if not st.session_state.get("_storage_checked"):
-    _raw = streamlit_js_eval(
-        js_expressions=f"window.localStorage.getItem('{_STORAGE_KEY}')",
-        key="load_progress_js",
-    )
-    if _raw is not None:
-        # JS responded — either restored data or confirmed empty
-        st.session_state._storage_checked = True
-        if isinstance(_raw, str) and _raw != "null":
-            if _deserialize_state(_raw):
-                st.toast("📂 Previous progress restored from this browser",
-                         icon="💾")
-    else:
-        # JS hasn't responded yet — rerun to retry on the next pass
-        st.rerun()
-
-
+def _handle_upload():
+    """Callback to safely process the uploaded JSON."""
+    uploaded = st.session_state.get("progress_uploader")
+    if uploaded is not None:
+        if import_progress_from_bytes(uploaded.read()):
+            st.session_state._upload_success = True
+        else:
+            st.session_state._upload_success = False
 # ============================================================================
 # HELPERS
 # ============================================================================
@@ -1387,26 +1345,37 @@ def render_sidebar():
                 st.session_state.selected_chapter = None
                 st.rerun()
 
-        st.markdown("---")
-        st.markdown("#### 💾 Progress")
-        if st.button("💾 Save to this browser", use_container_width=True):
-            save_to_local_storage()
-            st.success("Progress saved to this browser.")
-        if st.button("📂 Restore from this browser", use_container_width=True):
-            if load_from_local_storage():
-                st.success("Progress restored.")
+                st.markdown("---")
+        st.markdown("#### 💾 Save / Load")
+        
+        st.download_button(
+            "⬇️ Download Progress (.json)",
+            data=export_progress_bytes(),
+            file_name="finspire_progress.json",
+            mime="application/json",
+            use_container_width=True,
+            help="Save to your device so you can restore after refreshing.",
+            key="sidebar_download"
+        )
+        
+        st.file_uploader(
+            "⬆️ Restore Progress (.json)",
+            type=["json"],
+            label_visibility="collapsed",
+            key="progress_uploader",
+            on_change=_handle_upload
+        )
+        
+        # ── The Fix: A manual confirmation button ──
+        if st.session_state.get("_upload_success") is True:
+            st.info("File loaded into memory. Click below to apply.")
+            if st.button("✅ Apply Restored Progress", type="primary", use_container_width=True):
+                st.session_state._upload_success = None
                 st.rerun()
-            else:
-                st.warning("No saved progress found in this browser.")
-        if st.button("🗑️ Clear saved progress", use_container_width=True):
-            clear_local_storage()
-            st.info("Saved progress cleared from this browser.")
-
-        st.markdown("---")
-        st.caption(f"XP: {st.session_state.xp} • "
-                   f"Badges: {len(st.session_state.achievements)} • "
-                   f"Journal: {len(st.session_state.journal)}")
-
+                
+        elif st.session_state.get("_upload_success") is False:
+            st.error("❌ Invalid file format.")
+            st.session_state._upload_success = None
 
 # ============================================================================
 # ONBOARDING
@@ -1451,12 +1420,10 @@ def render_onboarding():
                  disabled=profile is None):
         st.session_state.risk_profile = profile.split(" — ")[0]
         st.session_state.onboarded = True
-        save_to_local_storage()
         st.rerun()
     if c2.button("Explore first (no risk profile)", use_container_width=True):
         st.session_state.risk_profile = "Balanced"
         st.session_state.onboarded = True
-        save_to_local_storage()
         st.rerun()
 
 
@@ -1625,7 +1592,6 @@ def render_chapter_detail(cid):
                     if cid in ach_map: unlock_ach(ach_map[cid])
                     if len(st.session_state.completed_chapters) == len(CURRICULUM):
                         unlock_ach("graduate")
-                    save_to_local_storage()
                     st.balloons()
                     st.success(f"🎉 {correct}/3! "
                                f"{inr(ch['reward'])} {t('pass_reward')}")
@@ -1922,7 +1888,6 @@ def page_trade():
 
         if submit:
             handle_trade(asset_class, ticker, action, amt, inst_price, reason)
-            save_to_local_storage()
 
         if st.session_state.feedback:
             k, m = st.session_state.feedback
@@ -1931,7 +1896,6 @@ def page_trade():
 
         if st.button(t("advance"), use_container_width=True):
             advance_market()
-            save_to_local_storage()
             st.rerun()
 
     # ── RIGHT: Price chart ────────────────────────────────────────────
@@ -2263,7 +2227,6 @@ def page_options():
                 })
                 unlock_ach("options_paper")
                 award_xp(15, "Options paper trade opened")
-                save_to_local_storage()
                 st.success(f"✅ Bought {lots} lot(s) {strike} {option_type} "
                            f"@ {inr(price)} — total {inr(premium_total)}")
                 st.rerun()
@@ -2283,7 +2246,6 @@ def page_options():
                     "iv": iv, "margin": margin,
                 })
                 award_xp(15, "Options written")
-                save_to_local_storage()
                 st.success(f"✅ Sold {lots} lot(s) — collected "
                            f"{inr(premium_total)}, margin blocked {inr(margin)}")
                 st.rerun()
@@ -2326,7 +2288,6 @@ def page_options():
                     })
                     st.session_state.options_book.pop(i)
                     award_xp(10, "Options closed")
-                    save_to_local_storage()
                     st.rerun()
 
     if st.session_state.options_history:
@@ -2408,7 +2369,6 @@ def page_journal():
             unlock_ach("self_aware")
         unlock_ach("voice_trader")
         award_xp(10, "Journal entry")
-        save_to_local_storage()
         st.success("✅ Entry logged.")
         st.rerun()
 
@@ -2667,7 +2627,6 @@ def page_leaderboard():
     if submitted:
         st.session_state.leaderboard_name = name.strip() or "Anonymous"
         st.session_state.leaderboard_opt_in = opt
-        save_to_local_storage()
         st.success("Preferences updated.")
 
     st.markdown("---")
@@ -2847,7 +2806,8 @@ def page_dashboard():
     st.download_button("⬇️ Export progress (JSON)",
                        json.dumps(export, indent=2, default=str),
                        file_name="finspire_progress.json",
-                       mime="application/json")
+                       mime="application/json",
+                       key="dashboard_download")
 
 
 # ============================================================================
